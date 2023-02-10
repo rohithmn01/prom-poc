@@ -6,11 +6,21 @@ metadata:
 data:
   fluent.conf: |
     <source>
-        @type tail
-        path /var/log/nginx/access.log
-        tag nginx.access
-        format nginx
+        @type prometheus_tail_monitor
     </source>
-    <match nginx.access>
-      @type stdout
-    </match>
+    <source>
+        @type tail
+        <parse>
+        @type regexp
+        expression /^(?<timestamp>.+) (?<stream>stdout|stderr)( (.))? (?<remote>[^ ]*) (?<host>[^ ]*) (?<user>[^ ]*) \[(?<time>[^\]]*)\] \"(?<method>\w+)(?:\s+(?<path>[^\"]*?)(?:\s+\S*)?)?\" (?<status_code>[^ ]*) (?<size>[^ ]*)(?:\s"(?<referer>[^\"]*)") "(?<agent>[^\"]*)" (?<urt>[^ ]*)$/
+            time_format %d/%b/%Y:%H:%M:%S %z
+            keep_time_key true
+            types size:integer,reqtime:float,uct:float,uht:float,urt:float
+        </parse>
+        tag nginx
+        path /var/log/nginx/access.log
+        pos_file /tmp/fluent_nginx.pos
+    </source>
+    <filter nginx>
+        @type prometheus
+    </filter>

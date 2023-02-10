@@ -17,3 +17,7 @@ data:
         - source_labels: [__meta_kubernetes_endpoints_name]
           regex: 'node-exporter'
           action: keep
+      - job_name: 'fluentd'
+        target_groups:
+          - targets: ['10.244.0.92:24231']
+        metrics_path: /metrics
