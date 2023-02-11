@@ -26,7 +26,9 @@ spec:
         - name: nginx-logs
           mountPath: /var/log/nginx
       - name: fluentd
-        image: rohithmn01/krishna-fluentd:v1
+        image: hrexed/fluentd_dynatrace_prometheus:0.1
+        ports:
+        - containerPort: 24224
         #command:
         #- /bin/sh
         #- -c
