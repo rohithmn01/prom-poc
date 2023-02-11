@@ -30,9 +30,11 @@ data:
         pos_file /tmp/fluent_nginx.pos
     </source>
     <match nginx>
+        @type stdout
+    </match>
+    <filter nginx>
         @type prometheus
-        @id prometheus_output
-        listen "0.0.0.0:24231"
+        
         <metric>
             name nginx_size_bytes_total
             type counter
@@ -63,6 +65,6 @@ data:
             </labels>
         </metric>
 
-    </match>
+    </filter>
 
 
